@@ -14,7 +14,7 @@ use crate::{Error, Result, SuggestionsGuildManager};
 pub struct FetchSuggestions;
 
 impl FetchSuggestions {
-    async fn run<Db: Database, Manager: SuggestionsGuildManager<Db>>(
+    pub async fn run<Db: Database, Manager: SuggestionsGuildManager<Db>>(
         ctx: &Context,
         interaction: &CommandInteraction,
         options: Vec<ResolvedOption<'_>>,
@@ -103,7 +103,7 @@ impl FetchSuggestions {
         Ok(())
     }
 
-    fn register() -> CreateCommand {
+    pub fn register() -> CreateCommand {
         CreateCommand::new("fetch_suggestions")
             .description("Fetch suggestions from the suggestion channel")
             .default_member_permissions(Permissions::ADMINISTRATOR)
