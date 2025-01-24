@@ -9,17 +9,29 @@ use sqlx::{Database, Pool};
 use crate::{Suggestions, SuggestionsGuildManager};
 
 impl Suggestions {
-    pub async fn reaction_add<Db: Database, Manager: SuggestionsGuildManager<Db>>(
+    pub async fn reaction<Db: Database, Manager: SuggestionsGuildManager<Db>>(
         ctx: &Context,
         reaction: &Reaction,
         pool: &Pool<Db>,
-        channel: GuildChannel,
     ) {
-        let guild_id = channel.guild_id;
+        let Some(guild_id) = reaction.guild_id else {
+            return;
+        };
+
+        let Some(channel) = reaction.channel(&ctx).await.unwrap().guild() else {
+            return;
+        };
 
         let Some(row) = Manager::get(pool, guild_id).await.unwrap() else {
             return;
         };
+
+        if channel.parent_id.is_none()
+            || row.channel_id().is_none()
+            || channel.parent_id != row.channel_id()
+        {
+            return;
+        }
 
         let Some(review_channel_id) = row.review_channel_id() else {
             return;
