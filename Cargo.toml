@@ -13,4 +13,4 @@ zayden-core = { git = "https://github.com/zayden-bot/slash-command-core.git", br
 sqlx = { version = "*", default-features = false, features = ["any", "macros"] }
 serenity = { version = "*", default-features = false, features = ["model"] }
 async-trait = { version = "*", default-features = false }
-futures = "0.3.31"
+futures = { version = "*", default-features = false }
