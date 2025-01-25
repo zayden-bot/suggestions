@@ -44,9 +44,9 @@ impl Suggestions {
 
         let (pos_count, neg_count) = message.reactions.iter().fold((0, 0), |(pos, neg), r| {
             if r.reaction_type == positive_reaction {
-                (r.count, neg)
+                (r.count as i32, neg)
             } else if r.reaction_type == negative_reaction {
-                (pos, r.count)
+                (pos, r.count as i32)
             } else {
                 (pos, neg)
             }
@@ -107,8 +107,8 @@ fn create_embed(
     channel: &GuildChannel,
     message: &Message,
     embed_fields: &[EmbedField],
-    pos_count: u64,
-    neg_count: u64,
+    pos_count: i32,
+    neg_count: i32,
 ) -> CreateEmbed {
     let mut embed = CreateEmbed::new()
         .title(&channel.name)
