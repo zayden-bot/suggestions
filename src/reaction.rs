@@ -56,23 +56,25 @@ impl Suggestions {
 
         if (pos_count - neg_count) >= 20 {
             while let Some(mut msg) = messages.try_next().await.unwrap() {
-                if msg.embeds[0].url == Some(message.link()) {
-                    msg.edit(
-                        ctx,
-                        EditMessage::new()
-                            .embed(create_embed(
-                                &channel,
-                                &message,
-                                &msg.embeds[0].fields,
-                                pos_count,
-                                neg_count,
-                            ))
-                            .components(create_components()),
-                    )
-                    .await
-                    .unwrap();
+                if let Some(embed) = msg.embeds.first() {
+                    if embed.url == Some(message.link()) {
+                        msg.edit(
+                            ctx,
+                            EditMessage::new()
+                                .embed(create_embed(
+                                    &channel,
+                                    &message,
+                                    &msg.embeds[0].fields,
+                                    pos_count,
+                                    neg_count,
+                                ))
+                                .components(create_components()),
+                        )
+                        .await
+                        .unwrap();
 
-                    return;
+                        return;
+                    }
                 }
             }
 
